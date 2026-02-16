@@ -3,6 +3,8 @@
   margin: auto;
   padding: 2rem;
   font-family: Arial, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .grid {
@@ -19,6 +21,8 @@
 
 input, select {
   padding: 6px;
+  font-size: 1em;
+  box-sizing: border-box;
 }
 
 button {
@@ -31,6 +35,11 @@ button {
   margin-top: 20px;
   background: #213547;
   padding: 15px;
+  border-radius: 4px;
+}
+
+.results p {
+  margin: 8px 0;
 }
 
 .error {
@@ -53,4 +62,68 @@ button {
 
 button:hover {
   background-color: #2a2a2a !important;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    max-width: 100%;
+  }
+
+  .grid {
+    gap: 8px;
+  }
+
+  input, select {
+    padding: 8px;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  label {
+    font-size: 0.9em;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    margin: 1rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.75rem;
+  }
+
+  .grid {
+    gap: 6px;
+  }
+
+  input, select {
+    padding: 6px;
+    font-size: 14px;
+  }
+
+  label {
+    font-size: 0.85em;
+    font-weight: bold;
+  }
+
+  h2 {
+    font-size: 1.3em;
+  }
+
+  button {
+    padding: 12px 10px;
+    font-size: 0.95em;
+  }
+
+  .results {
+    padding: 10px;
+    font-size: 0.9em;
+  }
+
+  .results p {
+    margin: 6px 0;
+  }
 }
