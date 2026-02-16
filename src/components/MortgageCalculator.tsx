@@ -210,6 +210,16 @@ export default function MortgageCalculator() {
           <p>Total intereses: {formatUF(result.totalInterestUF)} UF</p>
         </div>
       )}
+
+      <footer className="footer">
+        <p>
+          Desarrollado por{" "}
+          <a href="https://www.linkedin.com/in/danielgericke/" target="_blank" rel="noopener noreferrer">
+            Daniel Gericke Ruiz
+          </a>
+        </p>
+        <p> Version 0.1.4</p>
+      </footer>
     </div>
   );
 }
