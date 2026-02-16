@@ -21,9 +21,24 @@
   margin-bottom: 20px;
 }
 
+/* Center labels vertically within grid cells */
+.grid label {
+  align-self: center;
+}
+
 /* Utility to make an item span two columns in the 3-column grid */
 .span-2 {
   grid-column: span 2;
+}
+
+.uf-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.uf-actions input[type="date"] {
+  padding: 6px;
 }
 
 input, select {

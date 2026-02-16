@@ -51,9 +51,92 @@ export default function MortgageCalculator() {
   // Display state for UF input to allow free editing without reformatting on every keystroke
   const [ufDisplay, setUfDisplay] = useState(() => formatNumber(form.ufValue, 2));
 
+  // UF fetch / date states
+  const [dateInput, setDateInput] = useState(() => new Date().toISOString().slice(0, 10));
+  const [ufLoading, setUfLoading] = useState(false);
+
   React.useEffect(() => {
     setUfDisplay(formatNumber(form.ufValue, 2));
   }, [form.ufValue]);
+
+  // Fetch latest UF from mindicador.cl
+  async function fetchUfToday() {
+    try {
+      setError("");
+      setUfLoading(true);
+      const res = await fetch("https://mindicador.cl/api/uf");
+      if (!res.ok) throw new Error("Error al obtener UF");
+      const data = await res.json();
+      // API returns a `serie` array with latest first
+      const value = (data && data.serie && data.serie.length > 0)
+        ? Number(data.serie[0].valor)
+        : (Number(data.valor) || 0);
+      if (!value) throw new Error("No se obtuvo el valor de la UF");
+      setForm({ ...form, ufValue: value });
+      setUfDisplay(formatNumber(value, 2));
+    } catch (e: any) {
+      setError(e?.message || "Error al obtener UF");
+    } finally {
+      setUfLoading(false);
+    }
+  }
+
+  // Fetch UF for specific date (YYYY-MM-DD)
+  async function fetchUfByDate(date: string) {
+    try {
+      setError("");
+      setUfLoading(true);
+      const dateStr = date; // expects YYYY-MM-DD
+
+      // First try the date-specific endpoint
+      const res = await fetch(`https://mindicador.cl/api/uf/${dateStr}`);
+      if (res.ok) {
+        const data = await res.json();
+        const value = (data && data.serie && data.serie.length > 0)
+          ? Number(data.serie[0].valor)
+          : (Number(data.valor) || 0);
+        if (!value) throw new Error("No se obtuvo el valor de la UF para la fecha");
+        setForm({ ...form, ufValue: value });
+        setUfDisplay(formatNumber(value, 2));
+        return;
+      }
+
+      // If the date endpoint fails (500 or no data), fetch the main series and find the closest match
+      const fallback = await fetch("https://mindicador.cl/api/uf");
+      if (!fallback.ok) throw new Error("Error al obtener UF desde el servicio");
+      const data = await fallback.json();
+      const serie = Array.isArray(data.serie) ? data.serie : [];
+
+      // Normalize and try to find exact date (compare YYYY-MM-DD)
+      const requested = new Date(dateStr);
+      let found = serie.find((it: any) => {
+        try {
+          return new Date(it.fecha).toISOString().slice(0, 10) === dateStr;
+        } catch {
+          return false;
+        }
+      });
+
+      // If not found, choose the closest earlier date in the serie
+      if (!found && serie.length > 0) {
+        const earlier = serie
+          .map((it: any) => ({ ...it, d: new Date(it.fecha) }))
+          .filter((it: any) => it.d <= requested)
+          .sort((a: any, b: any) => b.d.getTime() - a.d.getTime());
+        if (earlier.length > 0) found = earlier[0];
+        else found = serie[0]; // fallback to the most recent available
+      }
+
+      const value = found ? Number(found.valor) : 0;
+      if (!value) throw new Error("No se obtuvo el valor de la UF para la fecha");
+      setForm({ ...form, ufValue: value });
+      setUfDisplay(formatNumber(value, 2));
+    } catch (e: any) {
+      setError(e?.message || "Error al obtener UF para la fecha");
+    } finally {
+      setUfLoading(false);
+    }
+  }
 
   // Display states for other numeric fields so users can clear the input without it snapping to 0
   const [downPaymentDisplay, setDownPaymentDisplay] = useState(() => formatNumber(form.downPaymentValue, 0));
@@ -112,7 +195,6 @@ export default function MortgageCalculator() {
 
         <label>Valor UF</label>
         <input
-          className="span-2"
           type="text"
           value={ufDisplay}
           onChange={(e) => setUfDisplay(e.target.value)}
@@ -122,6 +204,20 @@ export default function MortgageCalculator() {
             setUfDisplay(formatNumber(n, 2));
           }}
         />
+        <button type="button" onClick={fetchUfToday} disabled={ufLoading}>
+          {ufLoading ? "Cargando UF..." : "Traer valor UF hoy"}
+        </button>
+
+        <label>Traer valor UF día:</label>
+        <input
+          type="date"
+          value={dateInput}
+          onChange={(e) => setDateInput(e.target.value)}
+          max={new Date().toISOString().slice(0, 10)}
+        />
+        <button type="button" onClick={() => fetchUfByDate(dateInput)} disabled={ufLoading}>
+          {ufLoading ? "Cargando..." : "Buscar"}
+        </button>
 
         <label>Pie</label>
         <input
@@ -218,7 +314,7 @@ export default function MortgageCalculator() {
             Daniel Gericke Ruiz
           </a>
         </p>
-        <p> Version 0.1.6</p>
+        <p> Version 0.2.0</p>
       </footer>
     </div>
   );
