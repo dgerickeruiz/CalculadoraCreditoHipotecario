@@ -1,0 +1,38 @@
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Utility to make an item span two columns in the 3-column grid */
+.span-2 {
+  grid-column: span 2;
+}
+
+input, select {
+  padding: 6px;
+}
+
+button {
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.results {
+  margin-top: 20px;
+  background: #213547;
+  padding: 15px;
+}
+
+.error {
+  color: red;
+}
