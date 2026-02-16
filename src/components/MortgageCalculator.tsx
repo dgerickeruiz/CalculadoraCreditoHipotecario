@@ -172,7 +172,7 @@ export default function MortgageCalculator() {
 
   return (
     <div className="container">
-      <h2>Calculadora Crédito Hipotecario</h2>
+      <h2>Calculadora Crédito Hipotecario 2.0</h2>
 
       <div className="grid">
         <label>Valor propiedad</label>
