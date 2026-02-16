@@ -1,12 +1,17 @@
 .container {
   max-width: 600px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0.05rem 2rem;
   font-family: Arial, sans-serif;
   width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+}
+
+.container h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
 }
 
 .grid {
@@ -136,7 +141,7 @@ button:hover {
 
 /* Footer styles */
 .footer {
-  margin-top: 2rem;
+  margin-top: auto;
   padding-top: 2rem;
   border-top: 1px solid #646cff;
   text-align: center;
@@ -162,7 +167,7 @@ button:hover {
 
 @media (max-width: 768px) {
   .footer {
-    margin-top: 1.5rem;
+    margin-top: auto;
     padding-top: 1.5rem;
     font-size: 0.85em;
   }
@@ -170,7 +175,7 @@ button:hover {
 
 @media (max-width: 480px) {
   .footer {
-    margin-top: 1rem;
+    margin-top: auto;
     padding-top: 1rem;
     font-size: 0.8em;
   }
