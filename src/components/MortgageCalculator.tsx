@@ -218,7 +218,7 @@ export default function MortgageCalculator() {
             Daniel Gericke Ruiz
           </a>
         </p>
-        <p> Version 0.1.4</p>
+        <p> Version 0.1.5</p>
       </footer>
     </div>
   );
