@@ -36,3 +36,21 @@ button {
 .error {
   color: red;
 }
+
+/* Ensure button is always dark and visible */
+button {
+  background-color: #1a1a1a !important;
+  color: rgba(255, 255, 255, 0.87) !important;
+  border: 1px solid #646cff;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #2a2a2a !important;
+}
